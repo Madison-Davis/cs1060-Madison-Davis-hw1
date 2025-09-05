@@ -9,41 +9,41 @@ function App() {
   const regions = ["South", "Midwest", "New England", "Great Plains", "Northwest", "Southwest"];
 
   useEffect(() => {
+    // Fetch data of random names using RandomUser API
+    const fetchDogNames = async (count = 12) => {
+      try {
+        const response = await fetch(`https://randomuser.me/api/?results=${count}&inc=name`);
+        const data = await response.json();
+        return data.results.map(user => user.name.first);
+      } catch (error) {
+        console.error("Error fetching dog names:", error);
+        return Array(count).fill("Dog");
+      }
+    };
+
+    // Create profiles of dogs with data to display
+    // Fetch data of dog images using Dog CEO API
+    const fetchDogs = async (count = 12) => {
+      try {
+        const imagesRes = await fetch(`https://dog.ceo/api/breeds/image/random/${count}`);
+        const imagesData = await imagesRes.json();
+        const names = await fetchDogNames(count);
+
+        const dogData = imagesData.message.map((img, index) => ({
+          id: index,
+          name: names[index],
+          photo: img,
+          region: regions[Math.floor(Math.random() * regions.length)] // Random region
+        }));
+
+        setDogs(dogData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchDogs();
-  }, [fetchDogs]);
-
-  // Create profiles of dogs with data to display
-  // Fetch data of dog images using Dog CEO API
-  const fetchDogs = async (count = 12) => {
-    try {
-      const imagesRes = await fetch(`https://dog.ceo/api/breeds/image/random/${count}`);
-      const imagesData = await imagesRes.json();
-      const names = await fetchDogNames(count);
-
-      const dogData = imagesData.message.map((img, index) => ({
-        id: index,
-        name: names[index],
-        photo: img,
-        region: regions[Math.floor(Math.random() * regions.length)] // Random region
-      }));
-
-      setDogs(dogData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // Fetch data of random names using RandomUser API
-  const fetchDogNames = async (count = 12) => {
-    try {
-      const response = await fetch(`https://randomuser.me/api/?results=${count}&inc=name`);
-      const data = await response.json();
-      return data.results.map(user => user.name.first);
-    } catch (error) {
-      console.error("Error fetching dog names:", error);
-      return Array(count).fill("Dog");
-    }
-  };
+  }, []);
 
   // Alter the Heart icon when a user goes to like a dog's profile
   const toggleLike = (id) => {
