@@ -6,7 +6,7 @@ function App() {
   const [likedDogs, setLikedDogs] = useState({});
   const [selectedArea, setSelectedArea] = useState("");
 
-  const regions = ["South", "Midwest", "New England", "Great Plains", "Northwest", "Southwest"];
+  const regions = useMemo(() => ["South", "Midwest", "New England", "Great Plains", "Northwest", "Southwest"], []);
 
   useEffect(() => {
     // Fetch data of random names using RandomUser API
@@ -43,7 +43,7 @@ function App() {
     };
 
     fetchDogs();
-  }, []);
+  }, [regions]);
 
   // Alter the Heart icon when a user goes to like a dog's profile
   const toggleLike = (id) => {
