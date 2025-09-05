@@ -10,7 +10,7 @@ function App() {
 
   useEffect(() => {
     fetchDogs();
-  }, []);
+  }, [fetchDogs]);
 
   // Create profiles of dogs with data to display
   // Fetch data of dog images using Dog CEO API
